@@ -49,12 +49,18 @@
             0.0,
             255.0
           ],
+          "arrowSize": 61,
           "color": [
             0.0,
             0.0,
             0.0,
             255.0
-          ]
+          ],
+          "image": "C:\\Users\\pjbru\\OneDrive\\Pictures\\retrobotics.jpg",
+          "length": 0.6096000075340271,
+          "style": "Box/Image",
+          "weight": 10.0,
+          "width": 0.6096000075340271
         },
         "XModules": {
           "arrowColor": [
@@ -73,7 +79,7 @@
           ],
           "style": "Hidden"
         },
-        "units": "feet",
+        "units": "inches",
         "window": {
           "visible": true
         }
@@ -86,15 +92,15 @@
         "open": true
       },
       "SmartDashboard": {
-        "Field": {
-          "open": true
-        },
         "open": true,
         "swerve": {
           "open": true
         }
       }
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   },
   "Plot": {
     "Plot <0>": {
