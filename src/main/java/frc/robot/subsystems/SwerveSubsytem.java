@@ -9,8 +9,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import java.io.File;
-//import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.AutoBuilder;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -22,8 +23,6 @@ public class SwerveSubsytem extends SubsystemBase{
 
     private final SwerveDrive swerveDrive;
 
-    //private AutoBuilder autoBuilder = new AutoBuilder();
-
     public SwerveSubsytem(File directory) {
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -34,16 +33,27 @@ public class SwerveSubsytem extends SubsystemBase{
         {
         throw new RuntimeException(e);
         }
+
+        if(!AutoBuilder.isConfigured()){
+          AutoBuilder.configureHolonomic(
+            this::getPose,
+            this::resetOdometry,
+            this::getRobotVelocity,
+            this::setChassisSpeeds,
+            Constants.Auton.HPFConfig, 
+            this
+          );  
+        }   
     }
 
 
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isopenloop)
-    {
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isopenloop){
       swerveDrive.drive(translation,
                         rotation,
                         fieldRelative,
                         isopenloop); // Open loop is disabled since it shouldn't be used most of the time.
     }
+
 
 
     public SwerveDriveKinematics getKinematics(){
@@ -111,6 +121,8 @@ public class SwerveSubsytem extends SubsystemBase{
     public void addFakeVisionReading(){
         swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp(), true, 4);
     }
+
+    
 
 
 }
