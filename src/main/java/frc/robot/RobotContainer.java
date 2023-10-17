@@ -27,7 +27,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
  */
 public class RobotContainer {
 
-  private final SwerveSubsytem drivebase = new SwerveSubsytem(new File(Filesystem.getDeployDirectory(), "neo"));
+  private final SwerveSubsytem drivebase; 
 
   CommandJoystick driverController = new CommandJoystick(1);
 
@@ -36,6 +36,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+
+    drivebase = new SwerveSubsytem(new File(Filesystem.getDeployDirectory(), "neo"));
+
     configureBindings();
 
     AbsoluteDrive closedAbsoluteDrive = new AbsoluteDrive(drivebase,
