@@ -12,11 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.io.File;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -25,13 +20,13 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import java.util.List;
 import java.util.Map;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 
 public class SwerveSubsytem extends SubsystemBase{
 
     private final SwerveDrive swerveDrive;
 
-    private SwerveAutoBuilder autoBuilder = null;
 
     public SwerveSubsytem(File directory) {
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
@@ -44,6 +39,7 @@ public class SwerveSubsytem extends SubsystemBase{
         throw new RuntimeException(e);
         }
 
+        AutoBuilder.configureHolonomic(this::getPose, this::resetOdometry,this::getRobotVelocity, this::setChassisSpeeds, Constants.Auton.HPFConfig, this);
         
     }
 
@@ -123,34 +119,7 @@ public class SwerveSubsytem extends SubsystemBase{
         swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp(), true, 4);
     }
     
-    public Command creatPathPlannerCommand(String path, PathConstraints constraints, Map<String, Command> eventMap,
-                                         PIDConstants translation, PIDConstants rotation, boolean useAllianceColor)
-    {
-      List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(path, constraints);
-  //    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-  //      Pose2d supplier,
-  //      Pose2d consumer- used to reset odometry at the beginning of auto,
-  //      PID constants to correct for translation error (used to create the X and Y PID controllers),
-  //      PID constants to correct for rotation error (used to create the rotation controller),
-  //      Module states consumer used to output to the drive subsystem,
-  //      Should the path be automatically mirrored depending on alliance color. Optional- defaults to true
-  //   )
-      if (autoBuilder == null)
-      {
-        autoBuilder = new SwerveAutoBuilder(
-            swerveDrive::getPose,
-            swerveDrive::resetOdometry,
-            translation,
-            rotation,
-            swerveDrive::setChassisSpeeds,
-            eventMap,
-            useAllianceColor,
-            this
-        );
-      }
-
-      return autoBuilder.fullAuto(pathGroup);
-    }
+    
 }
 
 

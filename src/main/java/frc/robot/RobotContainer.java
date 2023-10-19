@@ -13,9 +13,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.AbsoluteDrive;
-import frc.robot.commands.Auto;
 import frc.robot.subsystems.SwerveSubsytem;
 import java.io.File;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 
 
 /**
@@ -75,7 +78,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Auto.auto(drivebase);
+    PathPlannerPath path = PathPlannerPath.fromPathFile("ZOOP");
+
+    return AutoBuilder.followPathWithEvents(path);
   }
 
   public void setDriveMode(){

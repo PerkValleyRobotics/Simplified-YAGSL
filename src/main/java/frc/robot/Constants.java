@@ -8,7 +8,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import swervelib.math.Matter;
 import edu.wpi.first.math.util.Units;
 import swervelib.parser.PIDFConfig;
-
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -26,9 +28,14 @@ public final class Constants {
 
   public static final class Auton{
 
-    public static final PIDFConfig xAutoPID     = new PIDFConfig(0.7, 0, 0);
-    public static final PIDFConfig yAutoPID     = new PIDFConfig(0.7, 0, 0);
-    public static final PIDFConfig angleAutoPID = new PIDFConfig(0.4, 0, 0.01);
+    public static final HolonomicPathFollowerConfig HPFConfig = new HolonomicPathFollowerConfig( 
+                                                                    new PIDConstants(5.0, 0.0, 0.0),
+                                                                    new PIDConstants(5.0, 0.0, 0.0),
+                                                                    Constants.Auton.MAX_SPEED,
+                                                                    17.15,
+                                                                    new ReplanningConfig()
+    );
+
 
     public static final double MAX_SPEED        = 4;
     public static final double MAX_ACCELERATION = 2;
