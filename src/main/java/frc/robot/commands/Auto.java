@@ -22,11 +22,11 @@ import swervelib.parser.PIDFConfig;
 
 public class Auto  {
     public static CommandBase auto(SwerveSubsytem swerve){
-        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("TEST", new PathConstraints(4, 3));
+        List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("Line", new PathConstraints(4, 3));
 
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-
+        
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
           swerve::getPose,
 // Pose2d supplier
