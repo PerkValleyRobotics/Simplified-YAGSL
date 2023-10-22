@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.subsystems.SwerveSubsytem;
 import java.io.File;
-
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 
@@ -81,6 +81,8 @@ public class RobotContainer {
     PathPlannerPath path = PathPlannerPath.fromPathFile("ZOOP");
 
     return AutoBuilder.followPathWithEvents(path);
+
+    //return new PathPlannerAuto("TestAuto");
   }
 
   public void setDriveMode(){
