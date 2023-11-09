@@ -79,6 +79,7 @@ public class SwerveSubsytem extends SubsystemBase{
 
     public void zeroGyro(){
         swerveDrive.zeroGyro();
+        System.out.println("zeroing");
     }
 
     public void setMotorBrake(boolean brake){
