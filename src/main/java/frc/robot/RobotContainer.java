@@ -6,16 +6,22 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.commands.Auto;
+import frc.robot.commands.AutoFL;
+import frc.robot.commands.AutoL;
+import frc.robot.commands.challenge;
+import frc.robot.commands.zero;
 import frc.robot.subsystems.SwerveSubsytem;
 import java.io.File;
 
@@ -28,7 +34,7 @@ import java.io.File;
  */
 public class RobotContainer {
 
-  private final SwerveSubsytem drivebase; 
+  public final SwerveSubsytem drivebase; 
 
   CommandJoystick driverController = new CommandJoystick(1);
 
@@ -50,8 +56,10 @@ public class RobotContainer {
                                                                                        OperatorConstants.LEFT_Y_DEADBAND),
                                                           () -> MathUtil.applyDeadband(-driverXbox.getLeftX(),
                                                                                        OperatorConstants.LEFT_X_DEADBAND),
-                                                          () -> -driverXbox.getRightX(),
-                                                          () -> -driverXbox.getRightY(),
+                                                          () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
+                                                                                       OperatorConstants.LEFT_X_DEADBAND),
+                                                          () -> MathUtil.applyDeadband(-driverXbox.getRightY(),
+                                                                                       OperatorConstants.LEFT_Y_DEADBAND),
                                                           false);
 
     drivebase.setDefaultCommand(closedAbsoluteDrive);                                                 
@@ -68,7 +76,10 @@ public class RobotContainer {
    */ 
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
+    new JoystickButton(driverXbox, 1).onTrue(new InstantCommand(drivebase::zeroGyro));
+    new JoystickButton(driverXbox, 1).onTrue(new InstantCommand(()->drivebase.resetOdometry(new Pose2d())));
+
+    // new JoystickButton(driverXbox, 1).
   }
 
   /**
@@ -76,8 +87,13 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return Auto.auto(drivebase);
+  public Command getAutonomousCommand(Object autonChoice) {
+    //return AutoFL.auto(drivebase);
+    if (autonChoice.equals(1)) return new Auto(drivebase);
+    else if (autonChoice.equals(2)) return new AutoFL(drivebase);
+    else if (autonChoice.equals(3)) return new AutoL(drivebase);
+    else if (autonChoice.equals(4)) return new challenge(drivebase);
+    else return null;
   }
 
   public void setDriveMode(){

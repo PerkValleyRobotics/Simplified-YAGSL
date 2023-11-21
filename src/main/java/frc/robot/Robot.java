@@ -7,11 +7,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Auto;
+
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -20,6 +26,10 @@ import swervelib.parser.SwerveParser;
  */
 public class Robot extends TimedRobot
 {
+
+  private static AHRS navx = new AHRS();
+
+  private static SendableChooser m_chooser;
 
   private static Robot   instance;
   private        Command m_autonomousCommand;
@@ -41,9 +51,24 @@ public class Robot extends TimedRobot
   /**
    * This function is run when the robot is first started up and should be used for any initialization code.
    */
+  
+
   @Override
   public void robotInit()
   {
+
+    SmartDashboard.putBoolean("code run", false);
+
+    m_chooser = new SendableChooser<String>();
+
+    SmartDashboard.putData("Autons", m_chooser);
+
+    m_chooser.setDefaultOption("Nothing", 0);
+    m_chooser.addOption("1 meter left", 2);
+    m_chooser.addOption("1 meter forward", 1);
+    m_chooser.addOption("1 meter l3ft", 3);
+    m_chooser.addOption("challenge", 4);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -51,6 +76,11 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+
+    // navx.enableBoardlevelYawReset(true);
+    
+
+    // navx.zeroYaw();
   }
 
   /**
@@ -68,6 +98,8 @@ public class Robot extends TimedRobot
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+
   }
 
   /**
@@ -98,7 +130,7 @@ public class Robot extends TimedRobot
   public void autonomousInit()
   {
     m_robotContainer.setMotorBrake(true);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)

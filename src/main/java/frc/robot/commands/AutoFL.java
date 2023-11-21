@@ -16,10 +16,10 @@ import frc.robot.subsystems.SwerveSubsytem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Auto extends SequentialCommandGroup {
+public class AutoFL extends SequentialCommandGroup {
   /** Creates a new AutoFL. */
-  public Auto(SwerveSubsytem swerve) {
-    List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("One Meter", new PathConstraints(1, .5));
+  public AutoFL(SwerveSubsytem swerve) {
+    List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup("One Meter Left", new PathConstraints(4, 2));
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
