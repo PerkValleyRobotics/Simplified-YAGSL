@@ -46,7 +46,6 @@ public class SwerveSubsytem extends SubsystemBase{
         
     }
 
-
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isopenloop){
       swerveDrive.drive(translation,
                         rotation,
@@ -57,10 +56,6 @@ public class SwerveSubsytem extends SubsystemBase{
     public void putpossmartdashboard(){
        SmartDashboard.putNumber("Module 0", swerveDrive.getModulePositions()[0].distanceMeters);
     }
-
-    
-
-
 
     public SwerveDriveKinematics getKinematics(){
         return swerveDrive.kinematics;

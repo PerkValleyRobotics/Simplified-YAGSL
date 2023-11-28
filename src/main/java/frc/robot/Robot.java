@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.Auto;
+import frc.robot.commands.Autos.Auto;
 
 import java.io.File;
 import java.io.IOException;

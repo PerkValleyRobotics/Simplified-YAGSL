@@ -17,12 +17,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.AbsoluteDrive;
-import frc.robot.commands.Auto;
-import frc.robot.commands.AutoFL;
-import frc.robot.commands.AutoL;
-import frc.robot.commands.challenge;
+import frc.robot.commands.StrafeBreakLegsCmd;
+import frc.robot.commands.StrafeToTagCmd;
+import frc.robot.commands.TurnToTagCmd;
 import frc.robot.commands.zero;
+import frc.robot.commands.Autos.Auto;
+import frc.robot.commands.Autos.AutoFL;
+import frc.robot.commands.Autos.AutoL;
+import frc.robot.commands.Autos.challenge;
 import frc.robot.subsystems.SwerveSubsytem;
+import frc.robot.subsystems.VisionSubsystem;
+
 import java.io.File;
 
 
@@ -36,6 +41,8 @@ public class RobotContainer {
 
   public final SwerveSubsytem drivebase; 
 
+  public final VisionSubsystem vision;
+
   CommandJoystick driverController = new CommandJoystick(1);
 
   XboxController driverXbox = new XboxController(0);
@@ -45,6 +52,7 @@ public class RobotContainer {
     // Configure the trigger bindings
 
     drivebase = new SwerveSubsytem(new File(Filesystem.getDeployDirectory(), "neo"));
+    vision = new VisionSubsystem();
 
     configureBindings();
 
@@ -78,6 +86,10 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new JoystickButton(driverXbox, 1).onTrue(new InstantCommand(drivebase::zeroGyro));
     new JoystickButton(driverXbox, 1).onTrue(new InstantCommand(()->drivebase.resetOdometry(new Pose2d())));
+
+    new JoystickButton(driverXbox, 2).whileTrue(new TurnToTagCmd(vision, drivebase));
+    new JoystickButton(driverXbox, 3).whileTrue(new StrafeToTagCmd(vision, drivebase));
+    new JoystickButton(driverXbox, 4).whileTrue(new StrafeBreakLegsCmd(vision, drivebase));
 
     // new JoystickButton(driverXbox, 1).
   }

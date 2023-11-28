@@ -44,16 +44,14 @@ public class AbsoluteDrive extends CommandBase {
     // Get the desired chassis speeds based on a 2 joystick module.
 
     ChassisSpeeds desiredSpeeds = swerve.getTargetSpeeds(
-      vX.getAsDouble() / 1.5,
-      vY.getAsDouble() / 1.5,
+      vX.getAsDouble()/2,
+      vY.getAsDouble()/2,
       headingHorizontal.getAsDouble(),
       headingVertical.getAsDouble()
     );
 
     // Limit velocity to prevent tippy
-    Translation2d translation = SwerveController.getTranslation2d(
-      desiredSpeeds
-    );
+    Translation2d translation = SwerveController.getTranslation2d(desiredSpeeds);
     translation =
       SwerveMath.limitVelocity(
         translation,
@@ -68,27 +66,10 @@ public class AbsoluteDrive extends CommandBase {
     SmartDashboard.putNumber("LimitedTranslation", translation.getX());
     SmartDashboard.putString("Translation", translation.toString());
 
-    if (
-      Math.hypot(
-        headingHorizontal.getAsDouble(),
-        headingVertical.getAsDouble()
-      ) <
-      0.5
-    ) {
-      //swerve.SwerveController.lastAngleScalar = swerve.getHeading().getRadians();
-      // desiredSpeeds = swerve.getTargetSpeeds(vX.getAsDouble()/1.5, vY.getAsDouble()/1.5,
-      // // 0.71, 0.71);
-      // Math.cos(swerve.getHeading().getRadians()),
-      // Math.sin(swerve.getHeading().getRadians()));
-      // SmartDashboard.putBoolean("code run", true);
+    if (Math.hypot(headingHorizontal.getAsDouble(),headingVertical.getAsDouble()) <0.5) {
       swerve.drive(translation, 0, true, isOpenLoop);
     } else {
-      swerve.drive(
-        translation,
-        desiredSpeeds.omegaRadiansPerSecond,
-        true,
-        isOpenLoop
-      );
+      swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond,true, isOpenLoop);
     }
     // Make the robot move
 
