@@ -24,7 +24,7 @@ public class StrafeToTagCmd extends CommandBase {
     this.vision = vision;
     this.swerve = swerve;
 
-    controller = new PIDController(0.03, 0.1, 0.003); 
+    controller = new PIDController(0.03, 0.02, 0.0015); 
 
     controller.setSetpoint(0);
 

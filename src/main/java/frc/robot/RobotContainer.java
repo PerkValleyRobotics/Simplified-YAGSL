@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.commands.StrafeBreakLegsCmd;
+import frc.robot.commands.StrafeStalkerCmd;
 import frc.robot.commands.StrafeToTagCmd;
 import frc.robot.commands.TurnToTagCmd;
 import frc.robot.commands.zero;
@@ -90,6 +91,7 @@ public class RobotContainer {
     new JoystickButton(driverXbox, 2).whileTrue(new TurnToTagCmd(vision, drivebase));
     new JoystickButton(driverXbox, 3).whileTrue(new StrafeToTagCmd(vision, drivebase));
     new JoystickButton(driverXbox, 4).whileTrue(new StrafeBreakLegsCmd(vision, drivebase));
+    new JoystickButton(driverXbox, 5).whileTrue(new StrafeStalkerCmd(vision, drivebase));
 
     // new JoystickButton(driverXbox, 1).
   }

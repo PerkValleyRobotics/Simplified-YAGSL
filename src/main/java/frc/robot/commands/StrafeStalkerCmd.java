@@ -13,21 +13,25 @@ import swervelib.SwerveController;
 import frc.robot.subsystems.SwerveSubsytem;
 import edu.wpi.first.math.controller.PIDController;
 
-public class StrafeBreakLegsCmd extends CommandBase {
+public class StrafeStalkerCmd extends CommandBase {
   /** Creates a new TurnToTagCmd. */
   private VisionSubsystem vision;
   private SwerveSubsytem swerve;
 
-  private PIDController controller;
+  private PIDController controllerx, controllery;
 
-  public StrafeBreakLegsCmd(VisionSubsystem vision, SwerveSubsytem swerve) {
+  public StrafeStalkerCmd(VisionSubsystem vision, SwerveSubsytem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.vision = vision;
     this.swerve = swerve;
 
-    controller = new PIDController(0.275, 0.05, 0); 
+    controllerx = new PIDController(0.275, 0.05, 0); 
 
-    controller.setSetpoint(3);
+    controllerx.setSetpoint(3);
+
+    controllery = new PIDController(0.03, 0.02, 0.0015); 
+
+    controllery.setSetpoint(0);
 
     addRequirements(vision);
     addRequirements(swerve);
@@ -41,7 +45,7 @@ public class StrafeBreakLegsCmd extends CommandBase {
   @Override
   public void execute() {
     if (Math.abs(vision.getArea()) != 0 && vision.getv()){
-      swerve.drive(SwerveController.getTranslation2d(swerve.getTargetSpeeds(controller.calculate(vision.getArea()), 0, 0, 0)), 0, false , false);
+      swerve.drive(SwerveController.getTranslation2d(swerve.getTargetSpeeds(controllerx.calculate(vision.getArea()), controllery.calculate(vision.getX()), 0, 0)), 0, false , false);
      }
      else swerve.drive(new Translation2d(0, 0), 0, false , false);
 
