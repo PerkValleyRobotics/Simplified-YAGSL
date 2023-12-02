@@ -15,12 +15,15 @@ public class VisionSubsystem extends SubsystemBase {
   private double y = 0.0;
   private double area = 0.0;
   private double v;
+  private double[] campose;
+  private double[] def = {0,0,0,0,0,0};
 
   private NetworkTable table;
   private NetworkTableEntry tx;
   private NetworkTableEntry ty;
   private NetworkTableEntry ta;
   private NetworkTableEntry tv;
+  private NetworkTableEntry camposeentry;
 
   public VisionSubsystem() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -28,6 +31,7 @@ public class VisionSubsystem extends SubsystemBase {
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
     tv = table.getEntry("tv");
+    camposeentry = table.getEntry("camerapose_targetspace");
   }
 
   @Override
@@ -37,6 +41,8 @@ public class VisionSubsystem extends SubsystemBase {
     y = ty.getDouble(0.0);
     area = ta.getDouble(0.0);
     v = tv.getDouble(0.0);
+    campose = camposeentry.getDoubleArray(def);
+    System.out.println(campose[4]);
   }
 
 
@@ -54,5 +60,9 @@ public class VisionSubsystem extends SubsystemBase {
 
   public boolean getv() {
     return v == 1 ? true : false;
+  }
+
+  public double getRotation() {
+    return campose[4];
   }
 }

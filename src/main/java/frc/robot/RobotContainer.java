@@ -21,6 +21,8 @@ import frc.robot.commands.StrafeBreakLegsCmd;
 import frc.robot.commands.StrafeStalkerCmd;
 import frc.robot.commands.StrafeToTagCmd;
 import frc.robot.commands.TurnToTagCmd;
+import frc.robot.commands.allThreeTagCmd;
+import frc.robot.commands.turnAndStrafeTagCmd;
 import frc.robot.commands.zero;
 import frc.robot.commands.Autos.Auto;
 import frc.robot.commands.Autos.AutoFL;
@@ -92,6 +94,8 @@ public class RobotContainer {
     new JoystickButton(driverXbox, 3).whileTrue(new StrafeToTagCmd(vision, drivebase));
     new JoystickButton(driverXbox, 4).whileTrue(new StrafeBreakLegsCmd(vision, drivebase));
     new JoystickButton(driverXbox, 5).whileTrue(new StrafeStalkerCmd(vision, drivebase));
+    new JoystickButton(driverXbox, 6).whileTrue(new turnAndStrafeTagCmd(vision, drivebase));
+    new JoystickButton(driverXbox, 7).whileTrue(new allThreeTagCmd(vision, drivebase));
 
     // new JoystickButton(driverXbox, 1).
   }
