@@ -16,18 +16,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.commands.AbsoluteDrive;
-import frc.robot.commands.StrafeBreakLegsCmd;
-import frc.robot.commands.StrafeStalkerCmd;
-import frc.robot.commands.StrafeToTagCmd;
-import frc.robot.commands.TurnToTagCmd;
-import frc.robot.commands.allThreeTagCmd;
-import frc.robot.commands.turnAndStrafeTagCmd;
 import frc.robot.commands.zero;
 import frc.robot.commands.Autos.Auto;
 import frc.robot.commands.Autos.AutoFL;
 import frc.robot.commands.Autos.AutoL;
 import frc.robot.commands.Autos.challenge;
+import frc.robot.commands.DriveCmds.AbsoluteDrive;
+import frc.robot.commands.DriveCmds.AprilTagDriveCmd;
+import frc.robot.commands.DriveCmds.CreepDriveCmd;
+import frc.robot.commands.DriveCmds.FPSDriveCmd;
+import frc.robot.commands.limelight.StrafeBreakLegsCmd;
+import frc.robot.commands.limelight.StrafeStalkerCmd;
+import frc.robot.commands.limelight.StrafeToTagCmd;
+import frc.robot.commands.limelight.TurnToTagCmd;
+import frc.robot.commands.limelight.allThreeTagCmd;
+import frc.robot.commands.limelight.turnAndStrafeTagCmd;
 import frc.robot.subsystems.SwerveSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -49,6 +52,7 @@ public class RobotContainer {
   CommandJoystick driverController = new CommandJoystick(1);
 
   XboxController driverXbox = new XboxController(0);
+
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,8 +76,22 @@ public class RobotContainer {
                                                           () -> MathUtil.applyDeadband(-driverXbox.getRightY(),
                                                                                        OperatorConstants.LEFT_Y_DEADBAND),
                                                           false);
-
-    drivebase.setDefaultCommand(closedAbsoluteDrive);                                                 
+  FPSDriveCmd FPSDrive = new FPSDriveCmd(drivebase,
+                                                          // Applies deadbands and inverts controls because joysticks
+                                                          // are back-right positive while robot
+                                                          // controls are front-left positive
+                                                          () -> MathUtil.applyDeadband(-driverXbox.getLeftY(),
+                                                                                       OperatorConstants.LEFT_Y_DEADBAND),
+                                                          () -> MathUtil.applyDeadband(-driverXbox.getLeftX(),
+                                                                                       OperatorConstants.LEFT_X_DEADBAND),
+                                                          () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
+                                                                                       OperatorConstants.LEFT_X_DEADBAND),
+                                                          () -> MathUtil.applyDeadband(-driverXbox.getRightY(),
+                                                                                       OperatorConstants.LEFT_Y_DEADBAND),
+                                                          false);
+  
+    //drivebase.setDefaultCommand(closedAbsoluteDrive);  
+    drivebase.setDefaultCommand(FPSDrive);                                               
   }
 
   /**
@@ -90,12 +108,41 @@ public class RobotContainer {
     new JoystickButton(driverXbox, 1).onTrue(new InstantCommand(drivebase::zeroGyro));
     new JoystickButton(driverXbox, 1).onTrue(new InstantCommand(()->drivebase.resetOdometry(new Pose2d())));
 
-    new JoystickButton(driverXbox, 2).whileTrue(new TurnToTagCmd(vision, drivebase));
-    new JoystickButton(driverXbox, 3).whileTrue(new StrafeToTagCmd(vision, drivebase));
-    new JoystickButton(driverXbox, 4).whileTrue(new StrafeBreakLegsCmd(vision, drivebase));
-    new JoystickButton(driverXbox, 5).whileTrue(new StrafeStalkerCmd(vision, drivebase));
-    new JoystickButton(driverXbox, 6).whileTrue(new turnAndStrafeTagCmd(vision, drivebase));
-    new JoystickButton(driverXbox, 7).whileTrue(new allThreeTagCmd(vision, drivebase));
+    new JoystickButton(driverXbox, 6).whileTrue(new CreepDriveCmd(drivebase,
+                                                                  // Applies deadbands and inverts controls because joysticks
+                                                                  // are back-right positive while robot
+                                                                  // controls are front-left positive
+                                                                  () -> MathUtil.applyDeadband(-driverXbox.getLeftY(),
+                                                                                              OperatorConstants.LEFT_Y_DEADBAND),
+                                                                  () -> MathUtil.applyDeadband(-driverXbox.getLeftX(),
+                                                                                              OperatorConstants.LEFT_X_DEADBAND),
+                                                                  () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
+                                                                                              OperatorConstants.LEFT_X_DEADBAND),
+                                                                  () -> MathUtil.applyDeadband(-driverXbox.getRightY(),
+                                                                                              OperatorConstants.LEFT_Y_DEADBAND),
+                                                                  false));
+
+  new JoystickButton(driverXbox, 2).whileTrue(new AprilTagDriveCmd(drivebase, 
+                                                                    vision,
+                                                                    // Applies deadbands and inverts controls because joysticks
+                                                                    // are back-right positive while robot
+                                                                    // controls are front-left positive
+                                                                    () -> MathUtil.applyDeadband(-driverXbox.getLeftY(),
+                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
+                                                                    () -> MathUtil.applyDeadband(-driverXbox.getLeftX(),
+                                                                                                OperatorConstants.LEFT_X_DEADBAND),
+                                                                    () -> MathUtil.applyDeadband(-driverXbox.getRightX(),
+                                                                                                OperatorConstants.LEFT_X_DEADBAND),
+                                                                    () -> MathUtil.applyDeadband(-driverXbox.getRightY(),
+                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
+                                                                    false));
+
+    // new JoystickButton(driverXbox, 2).whileTrue(new TurnToTagCmd(vision, drivebase));
+    // new JoystickButton(driverXbox, 3).whileTrue(new StrafeToTagCmd(vision, drivebase));
+    // new JoystickButton(driverXbox, 4).whileTrue(new StrafeBreakLegsCmd(vision, drivebase));
+    // new JoystickButton(driverXbox, 5).whileTrue(new StrafeStalkerCmd(vision, drivebase));
+    // new JoystickButton(driverXbox, 6).whileTrue(new turnAndStrafeTagCmd(vision, drivebase));
+    // new JoystickButton(driverXbox, 7).whileTrue(new allThreeTagCmd(vision, drivebase));
 
     // new JoystickButton(driverXbox, 1).
   }

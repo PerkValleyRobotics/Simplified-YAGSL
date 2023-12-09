@@ -42,7 +42,7 @@ public class VisionSubsystem extends SubsystemBase {
     area = ta.getDouble(0.0);
     v = tv.getDouble(0.0);
     campose = camposeentry.getDoubleArray(def);
-    System.out.println(campose[4]);
+    //System.out.println(campose[4]);
   }
 
 

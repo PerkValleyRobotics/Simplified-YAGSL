@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.limelight;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,25 +13,21 @@ import swervelib.SwerveController;
 import frc.robot.subsystems.SwerveSubsytem;
 import edu.wpi.first.math.controller.PIDController;
 
-public class turnAndStrafeTagCmd extends CommandBase {
+public class StrafeBreakLegsCmd extends CommandBase {
   /** Creates a new TurnToTagCmd. */
   private VisionSubsystem vision;
   private SwerveSubsytem swerve;
 
-  private PIDController controllerx, controllerRotation;
+  private PIDController controller;
 
-  public turnAndStrafeTagCmd(VisionSubsystem vision, SwerveSubsytem swerve) {
+  public StrafeBreakLegsCmd(VisionSubsystem vision, SwerveSubsytem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.vision = vision;
     this.swerve = swerve;
 
-    controllerx = new PIDController(0.03, 0.02, 0.0015); 
+    controller = new PIDController(0.275, 0.05, 0); 
 
-    controllerx.setSetpoint(0);
-
-    controllerRotation = new PIDController(0.04, 0.01, 0); 
-
-    controllerRotation.setSetpoint(0);
+    controller.setSetpoint(3);
 
     addRequirements(vision);
     addRequirements(swerve);
@@ -45,7 +41,7 @@ public class turnAndStrafeTagCmd extends CommandBase {
   @Override
   public void execute() {
     if (Math.abs(vision.getArea()) != 0 && vision.getv()){
-      swerve.drive(SwerveController.getTranslation2d(swerve.getTargetSpeeds(0, controllerx.calculate(vision.getX()), 0, 0)), -controllerRotation.calculate(vision.getRotation()), false , false);
+      swerve.drive(SwerveController.getTranslation2d(swerve.getTargetSpeeds(controller.calculate(vision.getArea()), 0, 0, 0)), 0, false , false);
      }
      else swerve.drive(new Translation2d(0, 0), 0, false , false);
 
